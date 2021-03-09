@@ -1,17 +1,18 @@
 import os
 from subprocess import call
 from utils import randomize
-
+from base_object import BaseObject
 from process import Process
 
-class Dataset():
-    def __init__(self, name, folder, process, **kwargs):
+
+class Dataset(BaseObject):
+    def __init__(self, name, folder, process, *args, **kwargs):
         self.name = name
-        if not isinstance(process, Process):
-            raise ValueError("{} is not an instance of class Process".format(process))
+        assert isinstance(process, Process)
         self.process = process
         self.folder = folder
-        self.prefix = None if "prefix" not in kwargs else kwargs["prefix"]
+        self.prefix = kwargs.pop("prefix", None)
+        super(Dataset, self).__init__(*args, **kwargs)
 
     def locate_files(self):
         if not self.prefix:
